@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sopa de letras · Cáncer de mama</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <style>
+    :root{ --pink:#e91e63; --rose:#ff7aa8; --rose2:#ffd6e7; --wine:#ad1457; --bg:#fff6fa; --ink:#402236; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:var(--bg);color:var(--ink)}
+    header{padding:12px 16px;background:#ffffff;color:#fff}
+    main{max-width:1000px;margin:16px auto;padding:0 16px;display:grid;gap:12px;grid-template-columns:1fr 320px}
+    @media (max-width:900px){ main{grid-template-columns:1fr} }
+    .card{background:#fff;border-radius:14px;box-shadow:0 10px 24px rgba(233,30,99,.15);padding:14px}
+    h1{margin:0}
+    table{border-collapse:collapse;margin:auto}
+    td{width:36px;height:36px;border:1px solid #f3c4d6;text-align:center;font-weight:900;font-size:18px;cursor:pointer;user-select:none}
+    td.sel{background:var(--rose2)}
+    td.ok{background:#c8f7c5;border-color:#9be599}
+    .words{display:grid;gap:6px}
+    .words .w{display:flex;justify-content:space-between;align-items:center;background:#ffffff;padding:6px 10px;border-radius:10px;font-weight:800}
+    .done{color:#2e7d32}
+    .actions{display:flex;gap:10px}
+    button{appearance:none;border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
+    .primary{background:#f06292;color:#fff;box-shadow:0 6px 16px rgba(240,98,146,.24);padding:10px 14px;border-radius:10px;font-size:14px}
+    .ghost{background:#ffe4ef;color:#7a2c45;padding:8px 12px;border-radius:10px;font-size:13px}
+  .btn-primary{display:inline-block;padding:12px 18px;border-radius:999px;background:#e91e63;color:#fff;text-decoration:none;font-weight:800;box-shadow:0 8px 20px rgba(233,30,99,.25)}.btn-primary:hover{filter:brightness(.95)}
+
+.decor-wrap{position:fixed; inset:0; pointer-events:none; z-index:-1}
+.decor-wrap img{position:absolute; opacity:.09}
+.decor-wrap .tl{left:-40px; top:-20px; width:320px}
+.decor-wrap .tr{right:-30px; top:80px; width:280px}
+.decor-wrap .br{right:-20px; bottom:-30px; width:360px}
+@media (max-width: 768px){
+  .decor-wrap img{opacity:.06}
+  .decor-wrap .tl{width:200px; left:-20px; top:-10px}
+  .decor-wrap .tr{width:180px; right:-10px; top:60px}
+  .decor-wrap .br{width:220px; right:-10px; bottom:-10px}
+}
+
+</style>
+</head>
+<body>
+  <div class="decor-wrap">
+    <img src="{{ url_for('static', filename='decor_flower1.png') }}" class="tl" alt="">
+    <img src="{{ url_for('static', filename='decor_flower2.png') }}" class="tr" alt="">
+    <img src="{{ url_for('static', filename='decor_corner.png') }}" class="br" alt="">
+  </div>
+
+  <header><h1>🧩 Sopa de letras · Octubre Rosa</h1></header>
+
+        <div class="cta" style="max-width:1600px;margin:10px auto;padding:0 16px;text-align:center">
+          <a class="btn-primary" href="{{ url_for('static', filename='bases_concurso.pdf') }}" target="_blank" rel="noopener">Ver bases del concurso</a>
+        </div>
+        
+  <main>
+    <section class="card" id="board"></section>
+    <aside class="card">
+      <h3>Palabras a encontrar</h3>
+      <div id="words" class="words"></div>
+      <div class="actions" style="margin-top:10px">
+        <button class="primary" id="newBtn">Nueva sopa</button>
+        <button class="ghost" id="revealBtn">Revelar</button>
+      </div>
+      <p style="font-size:13px;opacity:.8">Incluye términos de prevención: mastografía, autoexploración, prevención, apoyo, detección, esperanza, solidaridad, salud, octubre rosa, chequeo.</p>
+    </aside>
+  </main>
+
+<script>
+  const WORDS = ['AUTOEXPLORACION', 'MASTOGRAFIA', 'CHEQUEOS', 'VIDASALUDABLE', 'ALIMENTACION', 'EJERCICIO', 'TABACO', 'ALCOHOL', 'PREVENCION', 'DETECCION', 'TEMPRANA', 'HOMBRES', 'CANCERDEMAMA'];
+  const N = 14;
+
+  const board = document.getElementById('board');
+  const wordsDiv = document.getElementById('words');
+
+  function randomChar(){ return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random()*26)]; }
+
+  function newBoard(){
+    const grid = Array.from({length:N}, ()=>Array.from({length:N}, ()=>''));
+    function place(word){
+      const dirs = [[1,0],[0,1],[1,1],[-1,1]];
+      for(let attempts=0; attempts<200; attempts++){
+        const [dr,dc] = dirs[Math.floor(Math.random()*dirs.length)];
+        const r0 = Math.floor(Math.random()*N);
+        const c0 = Math.floor(Math.random()*N);
+        let r=r0,c=c0, ok=true;
+        for(const ch of word){
+          if(r<0||c<0||r>=N||c>=N){ ok=false; break; }
+          if(grid[r][c]!=='' && grid[r][c]!==ch){ ok=false; break; }
+          r+=dr; c+=dc;
+        }
+        if(!ok) continue;
+        r=r0; c=c0;
+        for(const ch of word){ grid[r][c]=ch; r+=dr; c+=dc; }
+        return true;
+      }
+      return false;
+    }
+    const shuffled = [...WORDS].sort(()=>Math.random()-0.5);
+    shuffled.forEach(w=>place(w));
+    for(let r=0;r<N;r++) for(let c=0;c<N;c++) if(grid[r][c]==='') grid[r][c]=randomChar();
+
+    const tbl = document.createElement('table');
+    const sel = [];
+    tbl.onmousedown = (e)=>{
+      if(e.target.tagName!=='TD') return;
+      sel.length=0; clearSel(tbl);
+      e.target.classList.add('sel'); sel.push(e.target);
+      tbl.onmouseover = ev=>{ if(ev.buttons!==1) return; if(ev.target.tagName!=='TD') return; if(!sel.includes(ev.target)){ ev.target.classList.add('sel'); sel.push(ev.target); } };
+    };
+    tbl.onmouseup = ()=>{
+      const str = sel.map(td=>td.textContent).join('');
+      checkSelection(sel, str);
+      clearSel(tbl); sel.length=0; tbl.onmouseover=null;
+    };
+
+    for(let r=0;r<N;r++){
+      const tr = document.createElement('tr');
+      for(let c=0;c<N;c++){
+        const td = document.createElement('td');
+        td.textContent = grid[r][c];
+        tr.appendChild(td);
+      }
+      tbl.appendChild(tr);
+    }
+    board.innerHTML = ''; board.appendChild(tbl);
+    wordsDiv.innerHTML = WORDS.map(w=>`<div class="w" data-w="${w}"><span>${w}</span><span class="state">○</span></div>`).join('');
+  }
+
+  function clearSel(tbl){ tbl.querySelectorAll('.sel').forEach(td=> td.classList.remove('sel')); }
+
+  function checkSelection(cells, str){
+    const reversed = str.split('').reverse().join('');
+    const w = WORDS.find(w=> str===w || reversed===w);
+    if(!w) return;
+    cells.forEach(td=> td.classList.add('ok'));
+    const item = wordsDiv.querySelector(`[data-w="${w}"] .state`);
+    if(item){ item.textContent = '✔'; item.classList.add('done'); }
+  }
+
+  document.getElementById('newBtn').onclick = newBoard;
+  document.getElementById('revealBtn').onclick = ()=>{
+    const tds = document.querySelectorAll('td');
+    tds.forEach(td=> td.classList.add('sel'));
+    setTimeout(()=> tds.forEach(td=> td.classList.remove('sel')), 600);
+  };
+
+  newBoard();
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: dinamica-rosa
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: bash -lc 'mkdir -p /data/uploads /data/data && ln -sf /data/uploads ./uploads && ln -sf /data/data ./data && gunicorn wsgi:application --bind 0.0.0.0:$PORT --workers 3'
+    autoDeploy: true
+    disk:
+      name: persist
+      mountPath: /data
+      sizeGB: 2
+    envVars:
+      - key: SECRET_KEY
+        sync: false
+      - key: ADMIN_PIN
+        sync: false

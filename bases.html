@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bases del concurso · Que no SENOS olvide cuidarnos</title>
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+<style>
+  :root{ --pink:#e91e63; --rose:#ff7aa8; --bg:#fff6fa; --ink:#402236; }
+  *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:var(--bg);color:var(--ink)}
+  header{padding:14px 16px;background:#ffffff;color:#fff}
+  main{max-width:900px;margin:16px auto;padding:0 16px}
+  .card{background:#fff;border-radius:14px;box-shadow:0 10px 24px rgba(233,30,99,.15);padding:16px}
+  h1,h2{margin:0 0 10px}
+  ul{margin:0 0 0 16px}
+  .meta{display:grid;gap:6px;background:#fff;border-radius:12px;padding:10px;margin-bottom:10px}
+  a{color:#ad1457}
+.btn-primary{display:inline-block;padding:12px 18px;border-radius:999px;background:#e91e63;color:#fff;text-decoration:none;font-weight:800;box-shadow:0 8px 20px rgba(233,30,99,.25)}.btn-primary:hover{filter:brightness(.95)}
+
+.decor-wrap{position:fixed; inset:0; pointer-events:none; z-index:-1}
+.decor-wrap img{position:absolute; opacity:.09}
+.decor-wrap .tl{left:-40px; top:-20px; width:320px}
+.decor-wrap .tr{right:-30px; top:80px; width:280px}
+.decor-wrap .br{right:-20px; bottom:-30px; width:360px}
+@media (max-width: 768px){
+  .decor-wrap img{opacity:.06}
+  .decor-wrap .tl{width:200px; left:-20px; top:-10px}
+  .decor-wrap .tr{width:180px; right:-10px; top:60px}
+  .decor-wrap .br{width:220px; right:-10px; bottom:-10px}
+}
+
+</style>
+</head>
+<body>
+  <div class="decor-wrap">
+    <img src="{{ url_for('static', filename='decor_flower1.png') }}" class="tl" alt="">
+    <img src="{{ url_for('static', filename='decor_flower2.png') }}" class="tr" alt="">
+    <img src="{{ url_for('static', filename='decor_corner.png') }}" class="br" alt="">
+  </div>
+
+<header><h1>Que no <strong>SENOS</strong> olvide cuidarnos</h1><div>Primer concurso de fotografía · 02–14 octubre 2025</div></header>
+
+        <div class="cta" style="max-width:1600px;margin:10px auto;padding:0 16px;text-align:center">
+          <a class="btn-primary" href="{{ url_for('static', filename='bases_concurso.pdf') }}" target="_blank" rel="noopener">Ver bases del concurso</a>
+        </div>
+        
+<main>
+  <section class="card">
+    <h2>Actividad vivencial</h2>
+    <div class="meta">
+      <div><strong>Fecha:</strong> 17/10/2025</div>
+      <div><strong>Hora:</strong> 10:00 – 14:30 hrs</div>
+      <div><strong>Lugar:</strong> Carpa cerca de cajero de RH</div>
+      <div><strong>Dinámica:</strong> Exposición de fotografías y selección de ganadores</div>
+    </div>
+
+    <h2>Bases del concurso</h2>
+    <ul>
+      <li><strong>Equipo:</strong> máximo 5 participantes.</li>
+      <li><strong>Vestimenta:</strong> al menos una prenda rosa por participante.</li>
+      <li>La fotografía debe tomarse en las instalaciones de la empresa.</li>
+      <li>El motivo debe aludir a la prevención del cáncer de mama.</li>
+      <li>Rotular la foto con una frase de impacto relacionada.</li>
+      <li><strong>Recepción:</strong> del 02 al 14 de octubre.</li>
+      <li><strong>Envío:</strong> al correo <a href="mailto:nancy.lazaro@lacostena.com.mx">nancy.lazaro@lacostena.com.mx</a>.</li>
+      <li><strong>Dudas:</strong> extensiones 5552, 5580, 5581, 5582 y 5583.</li>
+    </ul>
+
+    <h2>Premios</h2>
+    <p>Para los 3 primeros lugares (paquete preventivo de salud – USG y/o mastografía, Papanicolau, Colposcopia, QS 35 elementos). *Pendiente cotización.</p>
+    <p>Una vez seleccionados los ganadores, se entregarán cupones para realizar los estudios.</p>
+  </section>
+</main>
+</body>
+</html>
